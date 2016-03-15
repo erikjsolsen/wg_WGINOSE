@@ -26,7 +26,7 @@ for (i in 1:length(area)){
   
   #' IMPORTING  & TRANSFORMING DATA
   #' ---------------------
-  data <- as.matrix(read.csv ("COMBO_test.csv", row.names=1, header=TRUE))
+  data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
   
   trans.std <- as.data.frame(scale(log10(data+1)))
   
@@ -53,25 +53,26 @@ for (i in 1:length(area)){
   
   #' Plotordination using PC1 & PC2 scores
   
-  plot(data.pca$x[,1],data.pca$x[,2], xlab = "PC1", xlim = c(-8,11), ylab = "PC2", type = "both", main ="PCA")
-  text(data.pca$x[,1], data.pca$x[,2], row.names(data), cex=0.9, pos=4, col="red") # add labels
+  #plot(data.pca$x[,1],data.pca$x[,2], xlab = "PC1", xlim = c(-8,11), ylab = "PC2", type = "both", main =paste("PCA", area.names[i]))
+  #text(data.pca$x[,1], data.pca$x[,2], row.names(data), cex=0.9, pos=4, col="red") # add labels
   
   pdf(paste("WGINOSE16_PCA_ordniation_", area.names[i], area[i], ".pdf", sep=""))
-  plot(data.pca$x[,1],data.pca$x[,2], xlab = "PC1", xlim = c(-10,11), ylab = "PC2", type = "both", main ="PCA")
+  plot(data.pca$x[,1],data.pca$x[,2], xlab = "PC1", xlim = c(-10,11), ylab = "PC2", type = "both", main =paste("PCA", area.names[i]))
   text(data.pca$x[,1], data.pca$x[,2], row.names(data), cex=0.9, pos=4, col="red") # add labels
   dev.off()
-  
-  
+
   #' reorder the data matrix stnddata using the ranked order of PC1 loadings pc1.order
   
   trans.std.order <- as.matrix(trans.std[, pc1.order])
   
   #' Heat plot of PCA scores
   
-  levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.7)), main=list(label="PCA Heatplot", cex = 2), xlab=list(label="Year",cex=2), ylab=list(label="Variables",cex=2), aspect = 1.25)
+ # levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.7)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 2), xlab=list(label="Year",cex=2), ylab=list(label="Variables",cex=2), aspect = 1.25)
   
   pdf(paste("WGINOSE16_PCA_heat", area.names[i], area[i], ".pdf", sep=""))
-  levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.4)), main=list(label="PCA Heatplot", cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
+  #png(paste("WGINOSE16_PCA_heat", area.names[i], area[i], ".png", sep=""))
+  p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.4)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
+  print(p1)
   dev.off()
 }
 
