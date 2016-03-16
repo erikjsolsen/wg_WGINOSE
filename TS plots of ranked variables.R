@@ -72,6 +72,7 @@ for (i in 8:length(area)){  # not the same number of StDev and mean columns
   colnames(HR4)<-c("year", "data", "StDev", "HR", "variable")
   
   HRdata<-rbind(HR1, HR2, HR3, HR4)
+  #HRdata<-rbind(HR1, HR2) special case for Area 7 with too few observations to calculate StDev for many of the variables
 
   #' create plot using geom_ribbon + geom_line
   HRplot<-ggplot(HRdata, aes(year))
