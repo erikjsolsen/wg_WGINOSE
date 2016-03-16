@@ -7,6 +7,8 @@
 #' LIBRARIES
 #' ---------------------
 library (lattice)
+library(dplyr)
+library(tidyr)
 
 #' SETTING WORKING DIRECTORIES
 #' ---------------------
@@ -47,6 +49,13 @@ for (i in 1:length(area)){
   pc1.order <- order(pc1, na.last = TRUE, decreasing = TRUE)
   loadings.order <- loadings[pc1.order,]
   loadings.order
+  
+  #' add two columns with rank (based on absolute scores) in relation to PC1 and PC2
+  loadings.order <- cbind(rownames(loadings.order), loadings.order[1:2])
+  colnames(loadings.order)[1]<-c("variable")
+  loadings.order <- tbl_df(loadings.order)
+  loadings.order <- mutate(loadings.order, Rank1 = percent_rank(abs(pc1)) )
+  loadings.order <- mutate(loadings.order, Rank2 = percent_rank(abs(pc2)) )
   
   write.csv(loadings.order, file = paste("WGINOSE16_Varloadings_",area.names[i], area[i], ".csv", sep=""))
   
