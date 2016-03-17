@@ -19,7 +19,7 @@ area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Ban
 # Add area names to the plots and file names
 
 #for (i in 1:length(area)){ 
-for (i in 8:length(area)){  # not the same number of StDev and mean columns
+for (i in 1:length(area)){  # not the same number of StDev and mean columns
   
 
   #' SET WORKING DIRECTORY
@@ -84,4 +84,38 @@ for (i in 8:length(area)){  # not the same number of StDev and mean columns
   
 }
   
+
+#' Extract Rank from PCA table and add it to a common PCA table
+for (i in 1:length(area)){  # not the same number of StDev and mean columns
+  setwd("~/ownCloud/Research/WGINOSE/PCA IEA analysis/") 
+  PCAtable<-tbl_df(read.csv(paste("WGINOSE16_Varloadings_",area.names[i], area[i], ".csv", sep="")))
+  PCAtable<-arrange(PCAtable, variable)
+  
+  if (i==1) {
+    RankTable<-PCAtable[c(2,5,6)]
+    colnames(RankTable)[2]<-c("A1_R1")
+    colnames(RankTable)[3]<-c("A1_R2")
+  }
+  
+  if (i>1) {
+    RankTable[c(i+2,i+3)]<-1
+    colnames(RankTable)[c(i+2)]<-c(paste("A", area[i], "_R1", sep=""))
+    colnames(RankTable)[c(i+3)]<-c(paste("A", area[i], "_R2", sep=""))
+    
+    for (j in 1:length(PCAtable$variable){   
+      if (length(grep("tull", PCAtable$variable))>0){ 
+        grep row number for varible in PCAtable and allocate rank to cell in new columns
+      }
+    
+      if (length(grep("tull", PCAtable$variable))==0){ 
+        rbind new line with new variable
+        add rank in correct closeAllConnections
+        give colname to new columns
+      }
+    }
+  }
+}
+
+
+
   

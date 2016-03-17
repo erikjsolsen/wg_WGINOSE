@@ -24,6 +24,7 @@ area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Ban
 # Add area names to the plots and file names
 
 for (i in 1:length(area)){ 
+  # for (i in 7:9){ 
 
   
   #' IMPORTING  & TRANSFORMING DATA
