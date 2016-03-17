@@ -93,29 +93,87 @@ for (i in 1:length(area)){  # not the same number of StDev and mean columns
   
   if (i==1) {
     RankTable<-PCAtable[c(2,5,6)]
-    colnames(RankTable)[2]<-c("A1_R1")
-    colnames(RankTable)[3]<-c("A1_R2")
+    colnames(RankTable)[2]<-c("Orkney-Shetland_1")
+    colnames(RankTable)[3]<-c("Orkney-Shetland_2")
   }
   
   if (i>1) {
-    RankTable[c(i+2,i+3)]<-1
-    colnames(RankTable)[c(i+2)]<-c(paste("A", area[i], "_R1", sep=""))
-    colnames(RankTable)[c(i+3)]<-c(paste("A", area[i], "_R2", sep=""))
-    
-    for (j in 1:length(PCAtable$variable){   
-      if (length(grep("tull", PCAtable$variable))>0){ 
-        grep row number for varible in PCAtable and allocate rank to cell in new columns
-      }
-    
-      if (length(grep("tull", PCAtable$variable))==0){ 
-        rbind new line with new variable
-        add rank in correct closeAllConnections
-        give colname to new columns
-      }
-    }
+    Pt<-select(PCAtable, variable, Rank1, Rank2)
+    RankTable<-full_join(RankTable, Pt, by = "variable")
+    colnames(RankTable)[c(2*i)]<-c(paste(area.names[i], "_1", sep=""))
+    colnames(RankTable)[c(2*i+1)]<-c(paste(area.names[i], "_2", sep=""))
   }
+   
+}
+TRank<-t(RankTable)
+colnames(TRank)<-RankTable$variable
+TRank<-TRank[2:nrow(TRank),]
+TRank1<-TRank[grep(1, rownames(TRank)),]
+TRank2<-TRank[grep(2, rownames(TRank)),]
+
+write.csv(TRank, "Rank tables PCA loadings.csv")
+
+
+#'------------------ REST NOT USED --------
+#' cluster analysis & Dendrogram
+#' -----------------------------------
+#' Not appropriate to use this when combining data from all the different areas. 
+
+RankClust1 <- hclust(dist(TRank1))
+RankClust2 <- hclust(dist(TRank2))
+# very simple dendrogram
+png("Dedrogram PC1 ranks.png")
+plot(RankClust1, hang = -1, ann=FALSE)
+title("Dendrogram of ranked PC1 scores")
+dev.off()
+
+png("Dendrogram PC2 ranks.png")
+plot(RankClust2, hang = -1, ann=FALSE)
+title("Dendrogram of ranked PC2 scores")
+dev.off()
+
+
+#' Extract PC1 and PC2 from PCA table and add it to a common PCA table
+for (i in 1:length(area)){  # not the same number of StDev and mean columns
+  setwd("~/ownCloud/Research/WGINOSE/PCA IEA analysis/") 
+  PCAtable<-tbl_df(read.csv(paste("WGINOSE16_Varloadings_",area.names[i], area[i], ".csv", sep="")))
+  PCAtable<-arrange(PCAtable, variable)
+  
+  if (i==1) {
+    RankTable<-PCAtable[c(2,3,4)]
+    colnames(RankTable)[2]<-c("Orkney-Shetland_1")
+    colnames(RankTable)[3]<-c("Orkney-Shetland_2")
+  }
+  
+  if (i>1) {
+    Pt<-select(PCAtable, variable, pc1, pc2)
+    RankTable<-full_join(RankTable, Pt, by = "variable")
+    colnames(RankTable)[c(2*i)]<-c(paste(area.names[i], "_1", sep=""))
+    colnames(RankTable)[c(2*i+1)]<-c(paste(area.names[i], "_2", sep=""))
+  }
+  
 }
 
+TPC<-t(RankTable)
+colnames(TPC)<-RankTable$variable
+TPC<-TPC[2:nrow(TPC),]
+TPC1<-TPC[grep(1, rownames(TPC)),]
+TPC2<-TPC[grep(2, rownames(TPC)),]
 
+write.csv(TPC, "PCA loadings all areas.csv")
 
+#' cluster analysis & Dendrogram
+
+RankClust1 <- hclust(dist(TPC1))
+RankClust2 <- hclust(dist(TPC2))
+# very simple dendrogram
+png("Dedrogram PC1 loadings.png")
+plot(RankClust1, hang = -1, ann=FALSE)
+title("Dendrogram of  PC1 loadings")
+dev.off()
+
+png("Dendrogram PC2 loadings.png")
+plot(RankClust2, hang = -1, ann=FALSE)
+title("Dendrogram of ranked PC2 loadings")
+dev.off()
   
