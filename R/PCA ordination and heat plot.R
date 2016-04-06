@@ -9,6 +9,7 @@
 library (lattice)
 library(dplyr)
 library(tidyr)
+library("plyr", lib.loc="/Library/Frameworks/R.framework/Versions/3.2/Resources/library")
 
 #' SETTING WORKING DIRECTORIES
 #' ---------------------
@@ -32,6 +33,22 @@ for (i in 1:length(area)){
   data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
   
   trans.std <- as.data.frame(scale(log10(data+1)))
+  td<-trans.std
+  td[c(ncol(td)+1)]<-area.names[i]
+  colnames(td)[c(ncol(td))]<-c("area")
+  
+  if(i==1){ allTD <- td  
+  NS.all.data<-allTD  
+  NS.all.data$year<-rownames(NS.all.data)
+  }
+  
+  if(i>1){
+    td$year<-rownames(td)
+    NS.all.data<-rbind.fill(NS.all.data, td)
+
+    
+  }
+#}  
   
   
   #' ANALYSES

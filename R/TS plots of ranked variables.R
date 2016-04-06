@@ -85,7 +85,7 @@ for (i in 1:length(area)){  # not the same number of StDev and mean columns
 }
   
 
-#' Extract Rank from PCA table and add it to a common PCA table
+#' Extract RANK from PCA table and add it to a common PCA table
 for (i in 1:length(area)){  # not the same number of StDev and mean columns
   setwd("~/ownCloud/Research/WGINOSE/PCA IEA analysis/") 
   PCAtable<-tbl_df(read.csv(paste("WGINOSE16_Varloadings_",area.names[i], area[i], ".csv", sep="")))
@@ -105,13 +105,39 @@ for (i in 1:length(area)){  # not the same number of StDev and mean columns
   }
    
 }
+
+#for (i in 1:ncol(RankTable)){
+ # if (i==1){ TRank<-rbind(RankTable[1])}
+  #if (i>1) {Trank <-rbind(TRank, RankTable[2]) }
+  
+#}
+
 TRank<-t(RankTable)
 colnames(TRank)<-RankTable$variable
 TRank<-TRank[2:nrow(TRank),]
+class(TRank)<-"numeric"
+
 TRank1<-TRank[grep(1, rownames(TRank)),]
 TRank2<-TRank[grep(2, rownames(TRank)),]
 
+calculate average rank, median rank etc
+#BoxPlot Rank
+
+png("Rank boxplot PC1.png")
+par(mai=c(2.8,1,1,1), cex=0.8)
+boxplot(TRank1, las=2)
+title("Absolute rank PC1")
+dev.off()
+
+png("Rank boxplot PC2.png")
+par(mai=c(2.8,1,1,1), cex=0.8)
+boxplot(TRank2, las=2)
+title("Absolute rank PC2")
+dev.off()
+
 write.csv(TRank, "Rank tables PCA loadings.csv")
+
+
 
 
 #'------------------ REST NOT USED --------
