@@ -10,6 +10,8 @@ library (lattice)
 library(dplyr)
 library(tidyr)
 library("plyr", lib.loc="/Library/Frameworks/R.framework/Versions/3.2/Resources/library")
+library(ggplot2)
+library(RColorBrewer)
 
 #' SETTING WORKING DIRECTORIES
 #' ---------------------
@@ -50,6 +52,8 @@ for (i in 1:length(area)){
   }
 #}  
   
+
+  
   
   #' ANALYSES
   #' ---------------------
@@ -57,6 +61,7 @@ for (i in 1:length(area)){
   
   data.pca <- prcomp(trans.std, cor = F)
   summary(data.pca)
+  
   
   
   #' Extract loadings (eigenvalues) for PC1 & PC2 vectors
@@ -104,7 +109,26 @@ for (i in 1:length(area)){
 }
 
  
+#' PCA Analysis of all areas at once
+#' ---------------------------------
 
+NS.all.data<-cbind(NS.all.data[19:20], NS.all.data[1:18], NS.all.data[21:32])
+NS.all.select<-cbind(NS.all.data[c(5,7,10,12,13,14,16)])
 
+NSall.pca<-princomp(NS.all.select)
+summary(NSall.pca)
+NSall.scores<-cbind(NS.all.data$area, NS.all.data$year, as.data.frame(NSall.pca$scores))
+colnames(NSall.scores)[1]<-c("area")
+colnames(NSall.scores)[2]<-c("year")
 
+#' PCA plot of scores, colored by area
+pca.plot<-qplot(Comp.1, Comp.2, data=NSall.scores, colour=area) + geom_point() + scale_color_brewer(palette="Set3") +theme_bw() + ggtitle("PCA entire North Sea, common variables - AREAS")
+pca.plot
+ggsave("PCA_allNS_areas.png")
 
+#' PCA plot of scores, colored by year
+pca.plot2<-qplot(Comp.1, Comp.2, data=NSall.scores, colour=year) + geom_point() + scale_color_discrete() +theme_bw() + ggtitle("PCA entire North Sea, common variables- YEARS")
+pca.plot2
+ggsave("PCA_allNS_year.png")
+
+#' for the 1984 - 2014 data the effect of year seems more important than the effect of sub-areas. Perhaps this should be analyzed using a GAM?
