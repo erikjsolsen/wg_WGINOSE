@@ -130,3 +130,15 @@ pca.plot2
 ggsave("PCA_allNS_year.png")
 
 #' for the 1984 - 2014 data the effect of year seems more important than the effect of sub-areas. Perhaps this should be analyzed using a GAM?
+#' 
+
+#' CLUSTER ANALYSIS (dendrogram)
+
+RankClust1 <- hclust(dist(NS.all.data[3:32]))
+
+# very simple dendrogram
+png("All NS - Dedrogram PC1.png")
+plot(RankClust1, hang = -1, ann=FALSE)
+title("Dendrogram of PC1 scores - All NS")
+dev.off()
+
