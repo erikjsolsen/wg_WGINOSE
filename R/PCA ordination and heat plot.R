@@ -24,13 +24,19 @@ setwd("~/ownCloud/Research/WGINOSE/PCA IEA analysis") #erik local files
 
 area<-c(1:11)
 area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Bank", "Norfolk Banks", "German Bight", "Oyster Ground", "Southern Bight", "Skagerrak", "Kattegat" )
+
+#select only areas w benthos data
+area<-c(7:9)
+area.names<-c("German Bight", "Oyster Ground", "Southern Bight")
+
 # Add area names to the plots and file names
 
 for (i in 1:length(area)){ 
 
   #' IMPORTING  & TRANSFORMING DATA
   #' ---------------------
-  data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
+ # data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
+   data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue_benthos.csv", sep=""), row.names=1, header=TRUE))
   
   trans.std <- as.data.frame(scale(log10(data+1)))
   td<-trans.std
