@@ -2,6 +2,7 @@
 #' @description  Script used by WGINOSE for 2016 report
 #' @description  Based on earlier script developed by Andrew Kerry, CEFAS, UK        
 #' and produce a 'shade' plot  of the original data matrix (sorted against PC1)
+# new line here (4. mai)
 
 
 #' LIBRARIES
