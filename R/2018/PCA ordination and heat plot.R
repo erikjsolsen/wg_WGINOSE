@@ -1,7 +1,7 @@
 #' @title  PCA based Integrated Ecological analysis of the North Sea
 #' @description  Script used by WGINOSE for 2017 report
 #' @description  Based on earlier script developed by Andrew Kerry, CEFAS, UK   
-#' @date: 15.03.2017 - updated for WGINOSE analysis
+#' @date: 24.06.2018 - updated for 2018 WGINOSE analysis
 #'      
 #' and produce a 'shade' plot  of the original data matrix (sorted against PC1)
 
@@ -18,14 +18,14 @@ library(RColorBrewer)
 #' SETTING WORKING DIRECTORIES
 #' ---------------------
 #' setwd("/TEMP/WGINOSE 2016")
-setwd("~/ownCloud/Research/WGINOSE/2017/data") #erik local files
+setwd("~/ownCloud/Research/WGINOSE/2018/data") #erik local files
 
 
 #' looping through all WGINOSE AREAS
 #' ---------------------
 
-area<-c(1:12)
-area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Bank", "Norfolk Banks", "German Bight", "Oyster Ground", "Southern Bight", "Skagerrak", "Kattegat", "Norwegian Trench" )
+area<-c(1:11)
+area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Bank", "Norfolk Banks", "German Bight", "Oyster Ground", "Southern Bight", "Skagerrak", "Kattegat")
 
 #select only areas w benthos data
 # area<-c(7:9)
@@ -34,31 +34,31 @@ area.names<-c("Orkney-Shetland", "Fladen", "Utsira", "Long Forties", "Dogger Ban
 # Add area names to the plots and file names
 
 # Import Oceanographic data
-ocean<-read.csv("oceanogr data 1983_2016.csv")
+ocean<-read.csv("./20180406_WGINOSE_bottom_surface_temp_psal_nut/oceanogr data 1983_2018.csv")
 ocean$areanumber<-as.integer(substr(ocean$area, 4,5))
 
 
 
 for (i in 1:length(area)){ 
-
+  
   #' IMPORTING  & TRANSFORMING DATA
   #' ---------------------
- # data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
+  # data <- as.matrix(read.csv (paste("wgi", area[i], "_bottom_surface_cpue.csv", sep=""), row.names=1, header=TRUE))
   # TO DO:
   # read in CPUE fish file from area i
-   data <- read.csv (paste("CPUE mean area ", area[i], ".csv", sep=""), row.names=1, header=TRUE)
-   data<-subset(data, Year<2016)
-   
-   # Extract oceanographic data from area i
-   oc<-subset(ocean, c(areanumber==i & Year>1983 & Year<2016))
-   wntg<-which(colSums(is.na(oc))>0)
-   oc<-oc[,-c(wntg)]
-   
-   # Combine CPUE and oceanographic data for area i
-   data<-cbind(data, oc[ seq(3,length(oc)-1,2)])
-   
-   data<-as.matrix(data)
-   # Run rest of analysis
+  data <- read.csv (paste("CPUE mean area ", area[i], ".csv", sep=""), row.names=1, header=TRUE)
+  data<-subset(data, Year<2018)
+  
+  # Extract oceanographic data from area i
+  oc<-subset(ocean, c(areanumber==i & Year>1983 & Year<2018))
+  wntg<-which(colSums(is.na(oc))>0)
+  oc<-oc[,-c(wntg)]
+  
+  # Combine CPUE and oceanographic data for area i
+  data<-cbind(data, oc[ seq(3,length(oc)-1,2)])
+  
+  data<-as.matrix(data)
+  # Run rest of analysis
   
   trans.std <- as.data.frame(scale(log10(data+1)))
   wntg<-which(colSums(is.na(trans.std))>0)
@@ -77,12 +77,12 @@ for (i in 1:length(area)){
   if(i>1){
     td$year<-rownames(td)
     NS.all.data<-rbind.fill(NS.all.data, td)
-
+    
     
   }
-#}  
+  #}  
   
-
+  
   
   
   #' ANALYSES
@@ -122,25 +122,25 @@ for (i in 1:length(area)){
   plot(data.pca$x[,1],data.pca$x[,2], xlab = "PC1", xlim = c(-10,11), ylab = "PC2", type = "both", main =paste("PCA", area.names[i]))
   text(data.pca$x[,1], data.pca$x[,2], row.names(data), cex=0.9, pos=4, col="red") # add labels
   dev.off()
-
+  
   #' reorder the data matrix stnddata using the ranked order of PC1 loadings pc1.order
   
   trans.std.order <- as.matrix(ts[, pc1.order])
   
   #' Heat plot of PCA scores
   
- # levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.7)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 2), xlab=list(label="Year",cex=2), ylab=list(label="Variables",cex=2), aspect = 1.25)
+  # levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.7)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 2), xlab=list(label="Year",cex=2), ylab=list(label="Variables",cex=2), aspect = 1.25)
   
   pdf(paste("WGINOSE17_PCA_heat", area.names[i], area[i], ".pdf", sep=""))
   #png(paste("WGINOSE16_PCA_heat", area.names[i], area[i], ".png", sep=""))
-  p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.5, rot = 90), y=list(cex = 0.6)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
+  p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.4)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
   print(p1)
   dev.off()
 }
 
 
 
- 
+
 #' PCA Analysis of all areas at once
 #' ---------------------------------
 
@@ -175,4 +175,3 @@ png("All NS - Dedrogram PC1.png")
 plot(RankClust1, hang = -1, ann=FALSE)
 title("Dendrogram of PC1 scores - All NS")
 dev.off()
-

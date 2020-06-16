@@ -121,11 +121,15 @@ rownames(trans.std.order)<-rownames(trans.std)
 
 pdf("WGINOSE17_PCA_heat_Norw_Trench.pdf")
 #png(paste("WGINOSE16_PCA_heat", area.names[i], area[i], ".png", sep=""))
-p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.4)), main=list(label=("PCA Heatplot Norwegian trench"), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
+p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.8)), main=list(label=("PCA Heatplot Norwegian trench"), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
 
 #p1<-levelplot(trans.std.order, col.regions = rainbow(100, start = 0, end = 0.325), scales = list(x=list(cex=0.8, rot = 90), y=list(cex = 0.4)), main=list(label=paste("PCA Heatplot", area.names[i]), cex = 1), xlab=list(label="Year",cex=1), ylab=list(label="Variables",cex=1), aspect = 1.25)
               
 print(p1)
 dev.off()
+
+#' Create Mean SD_Dev tables
+
+
 
  

@@ -34,35 +34,35 @@ for (i in 1:length(area)){  # not the same number of StDev and mean columns
   
   #' IMPORT FILES
   #' ----------------
-  PCAtable<-tbl_df(read.csv(paste("../WGINOSE17_Varloadings_",area.names[i], area[i], ".csv", sep="")))
-  CPUEsd<-tbl_df(read.csv(paste("../../data/CPUE st_dev area ",area[i],".csv", sep="")))
+  PCAtable<-tbl_df(read.csv(paste("PCA_WGINOSE17_Varloadings_",area.names[i], area[i], ".csv", sep="")))
+  CPUEsd<-tbl_df(read.csv(paste("CPUE st_dev area ",area[i],".csv", sep="")))
   colnames(CPUEsd)[2]<-c("year")
-  CPUEmean<-tbl_df(read.csv(paste("../../data/CPUE mean area ",area[i],".csv", sep="")))
+  CPUEmean<-tbl_df(read.csv(paste("CPUE mean area ",area[i],".csv", sep="")))
   colnames(CPUEmean)[2]<-c("year")
   #Other<-tbl_df(read.csv(paste("../../data/wgi",area[i],"_mean_std.csv", sep="")))
-  Other<-tbl_df(read.csv(paste("../../data/wgi",area[i],"_mean_std.csv", sep="")))
+  Other<-tbl_df(read.csv(paste("./physical_data/wgi",area[i],"_mean_std.csv", sep="")))
   Other<-filter(Other, Year>1983)
   colnames(Other)[1]<-c("year")
   
-  benthos<-tbl_df(read.csv("../../data/ISIS_key_species_nha_station_mean_std.csv"))
-  benthos.sel<-filter(benthos, AreaName==area[i])
-  benthos.sel<-arrange(benthos.sel, year)
+  #benthos<-tbl_df(read.csv("../../data/ISIS_key_species_nha_station_mean_std.csv"))
+  #benthos.sel<-filter(benthos, AreaName==area[i])
+  #benthos.sel<-arrange(benthos.sel, year)
   
-  benthos.sel$SCIENTIFIC_NAME<-gsub(" Sp.", "_Sp_", benthos.sel$SCIENTIFIC_NAME)
-  benthos.sel$SCIENTIFIC_NAME<-gsub(" sp.", "_sp_", benthos.sel$SCIENTIFIC_NAME)
+  #benthos.sel$SCIENTIFIC_NAME<-gsub(" Sp.", "_Sp_", benthos.sel$SCIENTIFIC_NAME)
+  #benthos.sel$SCIENTIFIC_NAME<-gsub(" sp.", "_sp_", benthos.sel$SCIENTIFIC_NAME)
 
-  bl<-levels(as.factor((benthos.sel$SCIENTIFIC_NAME)))
+  #bl<-levels(as.factor((benthos.sel$SCIENTIFIC_NAME)))
   
   #select benthos species included in PCA analysis
   #bl<- bl[c(3,5,6,8,9,11,13)]
   
-  for (j in 1:length(bl)){ 
-    benthos.sel.sp<-filter(benthos.sel, SCIENTIFIC_NAME==bl[j])
+ # for (j in 1:length(bl)){ 
+    #benthos.sel.sp<-filter(benthos.sel, SCIENTIFIC_NAME==bl[j])
     
-    Other<-full_join(Other, benthos.sel.sp[,c(2,5,6)], by="year")
+   # Other<-full_join(Other, benthos.sel.sp[,c(2,5,6)], by="year")
 
-    colnames(Other)[c(dim(Other)[2]-1,dim(Other)[2])]<-c(paste(bl[j], "_mean", sep=""), paste(bl[j], "_std", sep=""))
-  }
+    #colnames(Other)[c(dim(Other)[2]-1,dim(Other)[2])]<-c(paste(bl[j], "_mean", sep=""), paste(bl[j], "_std", sep=""))
+#  }
   
   colnames(Other)<-gsub(" ", "_", colnames(Other))
 
